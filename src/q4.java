@@ -10,9 +10,7 @@
     We have to return the number of elements where there is no overlapping.
 */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class q4 {
 
@@ -20,18 +18,38 @@ public class q4 {
         int result = 0;
         int[][] array = new int[list.size()][list.get(0).size()];
 
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
         for(int i = 0; i < array.length; i++){
             array[i][0] = list.get(i).get(0) - list.get(i).get(1);
+            if(array[i][0] < min){
+                min = array[i][0];
+            }
             array[i][1] = list.get(i).get(0) + list.get(i).get(1);
+            if(array[i][1] > max){
+                max = array[i][1];
+            }
         }
 
-        // what if I find overlapping subLists and try to avoid taking them into consideration
-        List<int[]> answer = new ArrayList<>();
-        int[] currentInterval = array[0];
-        answer.add(currentInterval);
+        Arrays.sort(array, Comparator.comparingInt(arr -> arr[0]));
 
+//        // what if I find overlapping subLists and try to avoid taking them into consideration
+//        List<int[]> answer = new ArrayList<>();
+//        int[] currentInterval = array[0];
 
-        return result;
+        for(int i = 0; i < array.length - 1; i++){
+            int first = Math.max(array[i][0], array[i+1][0]);
+            int second = Math.min(array[i][1], array[i+1][1]);
+            if(first <= second){
+                result += (second - first);
+            }
+        }
+
+        // All we have to do now is simply subtract result from our spectrum which in our case is 5 - (-5) = 10 -> 10 - 4 = [6]
+        System.out.println("max: " + max);
+        System.out.println("min: " + min);
+
+        return (max - min) - result;
     }
 
     public static void main(String[] args){
